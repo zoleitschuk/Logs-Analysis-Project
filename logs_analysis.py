@@ -67,14 +67,31 @@ def get_authors_by_views():
     conn.close()
 
 def get_error_log():
-    print('days where more than 1% of requests resulted in errors:')
     conn = psycopg2.connect('dbname=news')
     cursor = conn.cursor()
     
+    query_string = """
+        SELECT a.date, (CAST(a.requests AS FLOAT)*100/(a.requests+b.requests))
+            FROM
+                (SELECT date(time) AS date, status, count(*) AS requests
+                    FROM log
+                    GROUP BY date, status) AS a,
+                (SELECT date(time) AS date, status, count(*) AS requests
+                    FROM log
+                    GROUP BY date, status) AS b
+            WHERE a.date=b.date
+                AND a.status!='200 OK'
+                AND a.status!=b.status
+                AND (CAST(a.requests AS FLOAT)*100/(a.requests+b.requests))>1
+            ORDER BY a.date DESC;
+    """
     
-    cursor.execute("SELECT * FROM log;")
-    x = cursor.fetchone()
-    print(x)
+    cursor.execute(query_string)
+    rows = cursor.fetchall()
+    
+    # Print results to the command line
+    for row in rows:
+        print(str(row[0]) + ' - ' + str(round(row[1], 1)) + '% errors ')
     
     # Close the cursor and connection
     cursor.close()
@@ -87,3 +104,6 @@ if __name__ == '__main__':
     print('\nAuthor Ranking by total article views:')
     print('--------------------------------------')
     get_authors_by_views()
+    print('\nDays where more than 1% of requests resulted in an error:')
+    print('-----------------------------------------------------------')
+    get_error_log()
