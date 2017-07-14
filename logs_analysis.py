@@ -91,7 +91,7 @@ def get_error_log():
     
     # Print results to the command line
     for row in rows:
-        print(str(row[0]) + ' - ' + str(round(row[1], 1)) + '% errors ')
+        print(str(row[0]) + ' - ' + str(round(row[1], 1)) + '% errors')
     
     # Close the cursor and connection
     cursor.close()
