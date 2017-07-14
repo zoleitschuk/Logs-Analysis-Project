@@ -1,6 +1,8 @@
 #! /usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
+A number of functions for printing a number of useful metrics on a local news
+PostgreSQL database to the command line.
 
 Created on Thu Jul 13 11:50:05 2017
 
@@ -27,7 +29,10 @@ def get_top_articles():
     conn = psycopg2.connect('dbname=news')
     cursor = conn.cursor()
 
-    # We do some stuff below...
+    # We query the news db in order to return an ordered table of articles and
+    # article view pairs. By joining the log and articles tables on modified
+    # log.path and articles.title columns we get a table of total article
+    # views.
     query_string = """
         SELECT articles.title, path_views.views
         FROM articles
@@ -82,7 +87,12 @@ def get_authors_by_views():
     conn = psycopg2.connect('dbname=news')
     cursor = conn.cursor()
 
-    # We do some stuff below...
+    # We query the news db in order to return an ordered table of author and
+    # article view pairs. By joining the log and articles tables on modified
+    # log.path and articles.title columns we a table of total article views.
+    # We can then join that table with the authors table on the FK relationship
+    # and group by author while summing on article views to get a table of
+    # authors and their total article views.
     query_string = """
         SELECT authors.name, sum(article_views.views) as author_views
         FROM authors
@@ -110,7 +120,6 @@ def get_authors_by_views():
         GROUP BY authors.id
         ORDER BY author_views DESC;
         """
-
     cursor.execute(query_string)
     rows = cursor.fetchall()
 
@@ -141,7 +150,11 @@ def get_error_log():
     conn = psycopg2.connect('dbname=news')
     cursor = conn.cursor()
 
-    # We do some stuff below...
+    # We query the db to get pairs of dates and error percentages where
+    # the error percentage is greater than 1% by performing a filtered self-
+    # join on the log table. The self-join results in a.requests containing
+    # a count of the failed requests and b.requests containing a count of
+    # the successful requests.
     query_string = """
         SELECT a.date, (CAST(a.requests AS FLOAT)*100/(a.requests+b.requests))
             FROM
@@ -157,7 +170,6 @@ def get_error_log():
                 AND (CAST(a.requests AS FLOAT)*100/(a.requests+b.requests))>1
             ORDER BY a.date DESC;
     """
-
     cursor.execute(query_string)
     rows = cursor.fetchall()
 
