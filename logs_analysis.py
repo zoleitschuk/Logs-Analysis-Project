@@ -1,5 +1,7 @@
+#! /usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
+
 Created on Thu Jul 13 11:50:05 2017
 
 @author: Zachary Oleitschuk
@@ -8,10 +10,24 @@ import psycopg2
 
 
 def get_top_articles():
+    """Prints top 3 articles by views to command line.
+
+    Connects to and queries the local news db for the top 3 articles based
+    on the number of successful views of the article. A sorted list of pairs
+    of article - article views is then printed to the command line and the db
+    connection is closed.
+
+    Args:
+        n/a
+
+    Returns:
+        n/a
+    """
     # Connect to the news db and create a cursor object
     conn = psycopg2.connect('dbname=news')
     cursor = conn.cursor()
 
+    # We do some stuff below...
     query_string = """
         SELECT articles.title, path_views.views
         FROM articles
@@ -48,10 +64,25 @@ def get_top_articles():
 
 
 def get_authors_by_views():
+    """Prints an ordered list of authors based on number of article views
+
+    Connects to and queries the local news db for all article authors and
+    orders that list by the total number of article views each author has
+    received in descending order. A sorted list of pairs of author - total
+    article views is then printed to the command line and the db connection is
+    closed.
+
+    Args:
+        n/a
+
+    Returns:
+        n/a
+    """
     # Connect to the news db and create a cursor object
     conn = psycopg2.connect('dbname=news')
     cursor = conn.cursor()
 
+    # We do some stuff below...
     query_string = """
         SELECT authors.name, sum(article_views.views) as author_views
         FROM authors
@@ -93,9 +124,24 @@ def get_authors_by_views():
 
 
 def get_error_log():
+    """Prints a list of all days where error percent was greater than 1%
+
+    Connects to and queries the local news db for all dates that had more than
+    1% of requests that resulted in an error and sorts dates in descending
+    order. A sorted list of date - error percent pairs is then printed to the
+    command line and the db connection is closed.
+
+    Args:
+        n/a
+
+    Returns:
+        n/a
+    """
+    # Connect to the news db and create a cursor object
     conn = psycopg2.connect('dbname=news')
     cursor = conn.cursor()
 
+    # We do some stuff below...
     query_string = """
         SELECT a.date, (CAST(a.requests AS FLOAT)*100/(a.requests+b.requests))
             FROM
