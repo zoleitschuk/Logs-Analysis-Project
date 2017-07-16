@@ -173,15 +173,15 @@ def get_error_log():
 if __name__ == '__main__':
     title = 'Top 3 artciles by number of views:'
     print(title)
-    print('-'*len(title))
+    print('-' * len(title))
     get_top_articles()
 
     title = '\nAuthor Ranking by total article views:'
     print(title)
-    print('-'*len(title))
+    print('-' * len(title))
     get_authors_by_views()
 
     title = '\nDays where more than 1% of requests resulted in an error:'
     print(title)
-    print('-'*len(title))
+    print('-' * len(title))
     get_error_log()
