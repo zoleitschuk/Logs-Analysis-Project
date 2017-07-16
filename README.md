@@ -11,7 +11,7 @@ A tool designed to be run from the command line to produce internal reports for 
 	* Create the news database with the command: `CREATE DATABASE news;`
 exit the console by typing: `\q`
 2. Download the schema and data for the news database:
-	1. [Click here to download](https://d17h27t6h515a5.cloudfront.net/topher/2016/August/57b5f748_newsdata/newsdata.zip)
+	* [Click here to download](https://d17h27t6h515a5.cloudfront.net/topher/2016/August/57b5f748_newsdata/newsdata.zip)
 3. Unzip the downloaded file. You should now have an sql script called newsdata.sql.
 4. From the command line, navigate to the directory containing newsdata.sql.
 5. Import the schema and data in newsdata.sql to the news database by typing: `psql -d news -f newsdata.sql`
