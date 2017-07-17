@@ -125,7 +125,7 @@ def get_authors_by_views():
 
     # Print results to the command line
     for author, views in results:
-        print('{} - {}'.format(author, views))
+        print('{} - {} views'.format(author, views))
 
 
 def get_error_log():
